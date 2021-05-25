@@ -1,0 +1,40 @@
+{
+	"manifest_version": 2,
+	"name": "FastProxer",
+	"shortname": "fastproxer",
+	"description": "A quicker way to navigate on proxer streams!",
+	"version": "1.0",
+	"icons": {
+		"16": "icons/icon_16.png",
+		"48": "icons/icon_48.png",
+		"128": "icons/icon_128.png"
+	},
+	"background": {
+		"scripts": ["background.js"]
+	},
+	"content_scripts": [
+		{
+			"all_frames": true,
+			"matches": ["https://stream.proxer.me/*"],
+			"css": ["style.css"],
+			"js": ["script.js"]
+		},
+		{
+			"all_frames": true,
+			"matches": ["https://proxer.me/watch/*"],
+			"css": ["style.css"],
+			"js": ["script_main.js"]
+		}
+	],
+
+	"permissions": ["tabs", "https://proxer.me/*", "cookies", "storage"],
+	"browser_action": {
+		"default_icon": {
+			"19": "icons/icon_19.png",
+			"38": "icons/icon_38.png",
+			"48": "icons/icon_48.png"
+		},
+		"default_title": "FastProxer Title",
+		"default_popup": "popup.html"
+	}
+}

@@ -1,0 +1,66 @@
+
+#ControlButton {
+	width: 120px;
+	height: 40px;
+	background-color: rgba(150,150,150,0.5);
+	cursor: pointer;
+	position: absolute;
+	border-radius: 10px;
+	font-size: 25px;
+	font-family: Arial;
+	font-weight: bold;
+	color: white;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	opacity: 1;
+	transition: background-color 0.25s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+#ControlButton:hover {
+	background-color: rgba(150,150,150,0.85);
+}
+
+#ControlButton.hidden {
+	opacity: 0;
+}
+
+.Next {
+	bottom: 80px;
+	right: 20px;
+}
+
+.Prev {
+	bottom: 80px;
+	left: 20px;
+}
+
+#ControlButton span {
+	position: absolute;
+}
+
+.ControlButtonBack {
+	border-radius: 10px;
+	position: absolute;
+	width: 120px;
+	height: 100%;
+	background-color: rgba(100,100,100,1);
+	clip: rect(0px, 0px, 40px, 0px);
+}
+
+.ControlButtonBack.started {
+	transition: all 5s linear;
+	clip: rect(0px, 120px, 40px, 0px);
+	/* width: 120px; */
+}
+
+#Test {
+	width: 10px;
+	height: 10px;
+	background-color: rgba(255,0,0,0.5);
+	border-radius: 50%;
+	position: absolute;
+	left:  20px;
+	top:  20px;
+}

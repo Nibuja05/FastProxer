@@ -1,0 +1,66 @@
+
+body {
+	height: 180px;
+	width: 250px;
+	transition: background-color 1s;
+}
+
+body.saved {
+	transition: background-color 0s;
+	background-color: rgba(0,255,0,0.1);
+}
+
+.TitleBar {
+	height: 40px;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+}
+
+.TitleBar #Icon {
+	background-image: url("icons/icon_128.png");
+	background-size: 80%;
+	background-position: center;
+	background-repeat: no-repeat;
+	width: 40px;
+	height: 40px;
+	margin-left: 5px;
+}
+
+.TitleBar .TitleText {
+	width: calc(100% - 40px);
+	margin-top: 6px;
+	margin-left: 5px;
+	font-family: Arial;
+	font-size: 25px;
+	letter-spacing: 1px;
+}
+
+.PopupMain {
+	margin: 0 10px;
+	font-family: Arial;
+}
+
+.PopupMain > span {
+	font-style: italic;
+	font-size: 14px;
+}
+
+.Placeholder {
+	width: 100%;
+	height: 3px;
+	border-radius: 10px;
+	background-color: gray;
+	margin: 8px 0;
+}
+
+.PopupSettingsEntry {
+	position: relative;
+	margin: 5px 0;
+	font-size: 16px;
+}
+
+.PopupSettingsEntry input {
+	position: absolute;
+	right: 0px;
+}
