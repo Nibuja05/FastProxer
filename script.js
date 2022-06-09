@@ -179,6 +179,21 @@ function OnStart() {
 		let progress = GetVideoProgress();
 		SaveVideoTime(progress);
 	});
+
+	// hide add banners
+	const video = document.getElementById("plyr");
+	if (video) {
+		if (video.classList.contains("video_ads")) {
+			video.classList.remove("video_ads");
+			video.style.display = "block";
+			const root = video.parentElement.parentElement;
+			root.style.display = "block";
+			root.style.height = "100%";
+
+			const adBanner = document.querySelector(".video_fw_info");
+			adBanner.style.display = "none";
+		}
+	}
 }
 
 function RestartChecks() {

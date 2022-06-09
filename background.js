@@ -13,6 +13,7 @@ async function SaveProgress(progress) {
 			value: "" + progress,
 		})
 	});
+	alrt("Save")
 }
 
 async function GetProgress() {

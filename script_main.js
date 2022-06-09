@@ -4,6 +4,7 @@ function OnStart() {
 	const player = document.querySelector("iframe");
 	if (player) {
 		player.focus();
+		player.contentWindow.focus();
 	}
 }
 
