@@ -1,45 +1,61 @@
-
-
 async function SaveProgress(progress) {
 	let allowed = await GetSetting("progress");
 	if (!allowed) return;
-	chrome.tabs.query({
-		currentWindow: true,
-		active: true
-	}, function(tab) {
-		chrome.cookies.set({
-			name: "FastProxer_VideoList",
-			url: tab[0].url,
-			value: "" + progress,
-		})
-	});
-	alrt("Save")
+	chrome.tabs.query(
+		{
+			currentWindow: true,
+			active: true,
+		},
+		function (tab) {
+			chrome.cookies.set({
+				name: "FastProxer_VideoList",
+				url: tab[0].url,
+				value: "" + progress,
+			});
+		}
+	);
 }
 
 async function GetProgress() {
 	let allowed = await GetSetting("progress");
 	if (!allowed) return;
-	chrome.tabs.query({
-		currentWindow: true,
-		active: true
-	}, function(tab) {
-		chrome.cookies.get({
-			name: "FastProxer_VideoList",
-			url: tab[0].url,
-		}, (cookie) => {
-			if (!cookie) return;
-			SendMessage("set-progress", cookie.value);
-		});
-	});
+	chrome.tabs.query(
+		{
+			currentWindow: true,
+			active: true,
+		},
+		function (tab) {
+			chrome.cookies.get(
+				{
+					name: "FastProxer_VideoList",
+					url: tab[0].url,
+				},
+				(cookie) => {
+					if (!cookie) return;
+					SendMessage("set-progress", cookie.value);
+				}
+			);
+		}
+	);
 }
 
+function DownloadVideo(info) {
+	const name = `${info.name} (${info.language}) - ${info.episode}.mp4`;
+	chrome.downloads.download({
+		url: videoUrl,
+		filename: name,
+	});
+	videoUrl = undefined;
+}
 
 maximized = false;
 startPlay = false;
 timeout = undefined;
 
+videoUrl = undefined;
+
 chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
-	sendResponse({status: "OK"});
+	sendResponse({ status: "OK" });
 	if (request.type === "set-max") {
 		maximized = request.message;
 		return;
@@ -71,16 +87,22 @@ chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
 			startPlay = false;
 		}, 5000);
 	}
+	if (request.type == "download") {
+		videoUrl = request.message;
+		SendMessage("get-info");
+	}
+	if (request.type === "send-info") {
+		if (videoUrl) DownloadVideo(request.message);
+	}
 	SendMessage(request.type);
 });
 
-
 function SendMessage(type, message) {
-	chrome.tabs.getSelected(null, function (tab){
+	chrome.tabs.getSelected(null, function (tab) {
 		if (!tab) return;
 		chrome.tabs.sendMessage(tab.id, {
 			type: type,
-			message	: message
+			message: message,
 		});
 	});
 }
@@ -90,7 +112,7 @@ let defaultSettings = {
 	progress: 1,
 	autonext: 1,
 	autoplay: 1,
-}
+};
 
 function GetSetting(name) {
 	return new Promise((resolve, reject) => {

@@ -1,14 +1,14 @@
-
 let settings = {
 	fullscreen: 1,
 	progress: 1,
 	autonext: 1,
 	autoplay: 1,
-}
-settingNames = ["progress", "fullscreen", "autonext", "autoplay"];
+	download: 0,
+};
+settingNames = ["progress", "fullscreen", "autonext", "autoplay", "download"];
 
 function CheckboxChange(element, name) {
-	SaveSettings(name, element.checked? 1 : 0);
+	SaveSettings(name, element.checked ? 1 : 0);
 }
 
 function SaveSettings(name, state) {
@@ -43,4 +43,4 @@ function OnStart() {
 
 window.onload = () => {
 	FetchSettings();
-}
+};

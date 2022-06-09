@@ -1,4 +1,3 @@
-
 let fullscreen = false;
 
 function OnFullScreenChange(event) {
@@ -24,7 +23,7 @@ function AddNextButton() {
 	buttonText.innerHTML = "Next";
 	button.appendChild(buttonText);
 
-	button.addEventListener("click", event => {
+	button.addEventListener("click", (event) => {
 		SendMessage("next");
 	});
 
@@ -42,11 +41,33 @@ function AddPrevButton() {
 	button.innerHTML = "Prev";
 	player.appendChild(button);
 
-	button.addEventListener("click", event => {
+	button.addEventListener("click", (event) => {
 		SendMessage("prev");
 	});
 
 	lastButton = button;
+}
+
+let downloadButton = undefined;
+
+function AddDownloadButton() {
+	let player = document.getElementById("plyr").parentElement.parentElement;
+	let button = document.createElement("div");
+	button.setAttribute("id", "DownloadButton");
+	button.classList.add("hidden");
+	player.appendChild(button);
+
+	button.addEventListener("click", (event) => {
+		CheckVideoSource();
+	});
+
+	downloadButton = button;
+}
+
+function CheckVideoSource() {
+	let source = document.getElementById("plyr").querySelector("source");
+	let url = source.getAttribute("src");
+	SendMessage("download", url);
 }
 
 function GetVideoProgress() {
@@ -68,7 +89,7 @@ function SetVideoProgress(progress) {
 			clearInterval(checkInterval);
 
 			const duration = video.duration;
-			const time = duration * (progress/100);
+			const time = duration * (progress / 100);
 			video.currentTime = time - 5;
 		}, 100);
 	}
@@ -113,7 +134,9 @@ async function Maximize() {
 	let allowed = await GetSetting("fullscreen");
 	if (!allowed) return;
 
-	const maxButton = document.querySelector(".plyr__controls button[data-plyr='fullscreen']");
+	const maxButton = document.querySelector(
+		".plyr__controls button[data-plyr='fullscreen']"
+	);
 	setTimeout(() => {
 		maxButton.click();
 	}, 10);
@@ -145,12 +168,17 @@ function OnMouseStill() {
 	if (skipTimeout) return;
 	if (nextButton) nextButton.classList.add("hidden");
 	if (lastButton) lastButton.classList.add("hidden");
+	if (downloadButton) downloadButton.classList.add("hidden");
 }
 
-function OnMouseMoveAgain() {
+async function OnMouseMoveAgain() {
 	still = false;
 	if (nextButton) nextButton.classList.remove("hidden");
 	if (lastButton) lastButton.classList.remove("hidden");
+
+	let download = await GetSetting("download");
+	if (!download) return;
+	if (downloadButton) downloadButton.classList.remove("hidden");
 }
 
 function OnStart() {
@@ -175,7 +203,7 @@ function OnStart() {
 			clearInterval(skipInterval);
 		}
 	}, 500);
-	window.addEventListener('beforeunload', function (e) {
+	window.addEventListener("beforeunload", function (e) {
 		let progress = GetVideoProgress();
 		SaveVideoTime(progress);
 	});
@@ -216,13 +244,14 @@ function SendMessage(type, message) {
 			type: type,
 			message: message || "",
 		},
-		response => {}
+		(response) => {}
 	);
 }
 
 chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
 	if (request.type === "is-next") {
 		AddNextButton();
+		AddDownloadButton();
 	}
 	if (request.type === "is-prev") {
 		AddPrevButton();
@@ -243,7 +272,8 @@ let defaultSettings = {
 	progress: 1,
 	autonext: 1,
 	autoplay: 1,
-}
+	download: 0,
+};
 
 function GetSetting(name) {
 	return new Promise((resolve, reject) => {

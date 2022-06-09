@@ -1,13 +1,12 @@
-
 body {
-	height: 180px;
+	height: 210px;
 	width: 250px;
 	transition: background-color 1s;
 }
 
 body.saved {
 	transition: background-color 0s;
-	background-color: rgba(0,255,0,0.1);
+	background-color: rgba(0, 255, 0, 0.1);
 }
 
 .TitleBar {

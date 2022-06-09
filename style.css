@@ -1,8 +1,7 @@
-
 #ControlButton {
 	width: 120px;
 	height: 40px;
-	background-color: rgba(150,150,150,0.5);
+	background-color: rgba(150, 150, 150, 0.5);
 	cursor: pointer;
 	position: absolute;
 	border-radius: 10px;
@@ -19,11 +18,13 @@
 }
 
 #ControlButton:hover {
-	background-color: rgba(150,150,150,0.85);
+	background-color: rgba(150, 150, 150, 0.85);
 }
 
-#ControlButton.hidden {
+#ControlButton.hidden,
+#DownloadButton.hidden {
 	opacity: 0;
+	pointer-events: none;
 }
 
 .Next {
@@ -45,7 +46,7 @@
 	position: absolute;
 	width: 120px;
 	height: 100%;
-	background-color: rgba(100,100,100,1);
+	background-color: rgba(100, 100, 100, 1);
 	clip: rect(0px, 0px, 40px, 0px);
 }
 
@@ -55,12 +56,22 @@
 	/* width: 120px; */
 }
 
-#Test {
-	width: 10px;
-	height: 10px;
-	background-color: rgba(255,0,0,0.5);
+#DownloadButton {
+	width: 40px;
+	height: 40px;
+	background-color: rgba(150, 150, 150, 0.5);
 	border-radius: 50%;
 	position: absolute;
-	left:  20px;
-	top:  20px;
+	right: 20px;
+	top: 20px;
+	background-image: url("https://i.imgur.com/yJdZoQg.png");
+	background-size: 60% 60%;
+	background-position: center;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	transition: background-color 0.25s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+#DownloadButton:hover {
+	background-color: rgba(150, 150, 150, 0.85);
 }

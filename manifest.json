@@ -26,7 +26,13 @@
 		}
 	],
 
-	"permissions": ["tabs", "https://proxer.me/*", "cookies", "storage"],
+	"permissions": [
+		"tabs",
+		"https://proxer.me/*",
+		"cookies",
+		"storage",
+		"downloads"
+	],
 	"browser_action": {
 		"default_icon": {
 			"19": "icons/icon_19.png",
