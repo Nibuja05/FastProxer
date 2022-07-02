@@ -17,7 +17,7 @@
 				wie noch nie!</span
 			>
 			<div class="Placeholder"></div>
-			<div class="PopupSettings">
+			<div id="PopupSettings">
 				<div class="PopupSettingsEntry">
 					<span>Vollbildmodus beibehalten</span>
 					<input id="fullscreen" type="checkbox" checked />
@@ -37,6 +37,40 @@
 				<div class="PopupSettingsEntry">
 					<span>Download Button anzeigen</span>
 					<input id="download" type="checkbox" checked />
+				</div>
+				<div
+					class="PopupSettingsEntryExtra Hidden HasTooltip"
+					linkedId="download"
+				>
+					<tooltip class="Top">
+						Lege die automatische Namensgebung für heruntergeladene
+						Datein fest.<br /><br />
+						Mögliche Inhalte <br />(eckige Klammern optional):
+						<ul>
+							<li><code>&lt;Name&gt;</code>: Name</li>
+							<li><code>&lt;Lang&gt;</code>: Sprache</li>
+							<li>
+								<code>&lt;Ep[<i>base</i>]&gt;</code>: Episode
+							</li>
+							<li>
+								<code>&lt;MaxEp[<i>base</i>]&gt;</code>: Anzahl
+								Episoden
+							</li>
+							<li>
+								<code>&lt;Se[<i>base</i>]&gt;</code>: Staffel
+								(manuell)
+							</li>
+						</ul>
+					</tooltip>
+					<span>Download Pattern:</span>
+					<input
+						id="downloadPattern"
+						value="<Name> (<Lang>) - <Ep[2]>"
+					/>
+					<div class="OptContent">
+						<span>Staffel:</span>
+						<input id="staffelNr" value="1" />
+					</div>
 				</div>
 			</div>
 		</div>

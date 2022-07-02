@@ -49,13 +49,21 @@ function AddPrevButton() {
 }
 
 let downloadButton = undefined;
+let buttonBar = undefined;
 
 function AddDownloadButton() {
 	let player = document.getElementById("plyr").parentElement.parentElement;
+
+	if (!buttonBar) {
+		buttonBar = document.createElement("div");
+		buttonBar.classList.add("ButtonBar");
+		player.appendChild(buttonBar);
+	}
+
 	let button = document.createElement("div");
 	button.setAttribute("id", "DownloadButton");
 	button.classList.add("hidden");
-	player.appendChild(button);
+	buttonBar.appendChild(button);
 
 	button.addEventListener("click", (event) => {
 		CheckVideoSource();
@@ -64,10 +72,33 @@ function AddDownloadButton() {
 	downloadButton = button;
 }
 
-function CheckVideoSource() {
+let massDownloadButton = undefined;
+
+function AddMassDownloadButton() {
+	let player = document.getElementById("plyr").parentElement.parentElement;
+
+	if (!buttonBar) {
+		buttonBar = document.createElement("div");
+		buttonBar.classList.add("ButtonBar");
+		player.appendChild(buttonBar);
+	}
+
+	let button = document.createElement("div");
+	button.setAttribute("id", "DownloadButton");
+	button.classList.add("Multi");
+	buttonBar.appendChild(button);
+
+	button.addEventListener("click", (event) => {
+		CheckVideoSource(true);
+	});
+
+	massDownloadButton = button;
+}
+
+function CheckVideoSource(mass = false) {
 	let source = document.getElementById("plyr").querySelector("source");
 	let url = source.getAttribute("src");
-	SendMessage("download", url);
+	SendMessage(mass ? "massDownload" : "download", url);
 }
 
 function GetVideoProgress() {
@@ -187,6 +218,9 @@ function OnStart() {
 		videoObj.focus();
 	}
 
+	AddDownloadButton();
+	AddMassDownloadButton();
+
 	SendMessage("check-next");
 	SendMessage("check-prev");
 	SendMessage("check-max");
@@ -251,7 +285,6 @@ function SendMessage(type, message) {
 chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
 	if (request.type === "is-next") {
 		AddNextButton();
-		AddDownloadButton();
 	}
 	if (request.type === "is-prev") {
 		AddPrevButton();
@@ -264,6 +297,9 @@ chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
 	}
 	if (request.type === "set-progress") {
 		SetVideoProgress(parseFloat(request.message));
+	}
+	if (request.type === "next-download") {
+		CheckVideoSource();
 	}
 });
 

@@ -1,12 +1,13 @@
 body {
-	height: 210px;
 	width: 250px;
 	transition: background-color 1s;
+	padding-bottom: 5px;
+	overflow: visible;
 }
 
 body.saved {
 	transition: background-color 0s;
-	background-color: rgba(0, 255, 0, 0.1);
+	background-color: #00ff003d;
 }
 
 .TitleBar {
@@ -49,7 +50,7 @@ body.saved {
 	width: 100%;
 	height: 3px;
 	border-radius: 10px;
-	background-color: gray;
+	background-color: #808080;
 	margin: 8px 0;
 }
 
@@ -62,4 +63,93 @@ body.saved {
 .PopupSettingsEntry input {
 	position: absolute;
 	right: 0px;
+}
+
+.PopupSettingsEntryExtra {
+	display: block;
+	padding-left: 10px;
+}
+
+.PopupSettingsEntryExtra.Hidden {
+	display: none;
+}
+
+.PopupSettingsEntryExtra input {
+	min-width: 212px;
+	font-family: "Courier New", Courier;
+}
+
+.PopupSettingsEntryExtra .OptContent {
+	padding-left: 20px;
+	justify-content: space-between;
+	align-items: center;
+	display: none;
+}
+
+.ShowOptContent .OptContent {
+	display: flex;
+}
+
+.PopupSettingsEntryExtra .OptContent input {
+	min-width: 25px;
+	max-width: 25px;
+	height: 12px;
+	font-family: "Courier New", Courier;
+	text-align: center;
+}
+
+.HasTooltip {
+	position: relative;
+	display: inline-block;
+	border-bottom: 1px dotted black;
+}
+
+.HasTooltip tooltip {
+	visibility: hidden;
+	min-width: 210px;
+	background-color: #191919;
+	color: #fff;
+	text-align: center;
+	padding: 10px;
+	border-radius: 6px;
+	opacity: 0.95;
+
+	/* Position the tooltip text - see examples below! */
+	position: absolute;
+	z-index: 1;
+}
+
+.HasTooltip:hover tooltip {
+	visibility: visible;
+}
+
+tooltip ul {
+	text-align: left;
+}
+
+tooltip code {
+	font-size: 13px;
+	color: #bcbcbc;
+}
+
+tooltip.Top {
+	bottom: 100%;
+	left: 50%;
+	margin-left: -50%;
+}
+
+tooltip.Bottom {
+	top: 100%;
+	left: 50%;
+	margin-left: -50%;
+}
+
+tooltip.Left {
+	top: -5px;
+	right: 105%;
+}
+
+tooltip.Right {
+	top: -5px;
+	left: 105%;
 }

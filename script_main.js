@@ -45,15 +45,34 @@ function MoveLast() {
 }
 
 function GetInfo() {
-	const name = document.querySelector(".wName");
-	const language = document.querySelector(".wLanguage");
-	const episode = document.querySelector(".wEp");
+	const container = document.querySelector("#wContainer");
+	const name = container.querySelector(".wName");
+	const language = container.querySelector(".wLanguage");
+	const episode = container.querySelector(".wEp");
+	const maxEpisode = GetNextChild(episode);
 
 	return {
 		name: name ? name.innerHTML : undefined,
 		language: language ? language.innerHTML : undefined,
 		episode: episode ? episode.innerHTML : undefined,
+		maxEpisode: maxEpisode ? ExtractNumber(maxEpisode) : undefined,
 	};
+}
+
+function ExtractNumber(textNode) {
+	if (textNode.nodeType != 3) return;
+	const match = textNode.nodeValue.match(/\d+/);
+	if (!match) return;
+	return match[0];
+}
+
+function GetNextChild(element) {
+	const parent = element.parentElement;
+	let isNext = false;
+	for (child of parent.childNodes) {
+		if (isNext) return child;
+		if (child == element) isNext = true;
+	}
 }
 
 function SendMessage(type, message) {
@@ -70,6 +89,8 @@ chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
 	if (request.type === "check-next") {
 		if (CheckNext()) {
 			SendMessage("is-next");
+		} else {
+			SendMessage("no-next");
 		}
 	}
 	if (request.type === "check-prev") {
