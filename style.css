@@ -93,3 +93,8 @@
 	opacity: 1;
 	pointer-events: inherit;
 }
+
+#player_code .plyr.plyr--video {
+	display: block !important;
+	height: 100% !important;
+}

@@ -242,19 +242,36 @@ function OnStart() {
 		SaveVideoTime(progress);
 	});
 
-	// hide add banners
-	const video = document.getElementById("plyr");
-	if (video) {
-		if (video.classList.contains("video_ads")) {
-			video.classList.remove("video_ads");
-			video.style.display = "block";
-			const root = video.parentElement.parentElement;
-			root.style.display = "block";
-			root.style.height = "100%";
+	RemoveReminder();
+}
 
-			const adBanner = document.querySelector(".video_fw_info");
-			adBanner.style.display = "none";
+function RemoveReminder() {
+	const video = document.querySelector("video");
+	if (video.classList.contains("video_ads")) {
+		video.classList.remove("video_ads");
+
+		function CheckDisplay() {
+			const curDisplay = video.style.display;
+			if (curDisplay.includes("none")) {
+				const style = video.getAttribute("style");
+				const newStyle = style.replace(/(?<=display: )none/, "block");
+				video.setAttribute("style", newStyle);
+				return false;
+			}
+			return true;
 		}
+		if (CheckDisplay()) return;
+		let tries = 0;
+		const checkInterval = setInterval(() => {
+			if (CheckDisplay()) {
+				clearInterval(checkInterval);
+			}
+			tries++;
+			if (tries > 1000) {
+				clearTimeout(checkInterval);
+				throw "Display could not be fixed!";
+			}
+		}, 10);
 	}
 }
 
