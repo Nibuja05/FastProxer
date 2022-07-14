@@ -150,7 +150,7 @@ chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
 			lastDownloadName = info.name;
 		}
 	}
-	if (request.type === "is-next") {
+	if (request.type === "is-next-download") {
 		if (!massDownload) return;
 		SendMessage("next-download");
 	}

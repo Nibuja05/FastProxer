@@ -89,6 +89,7 @@ chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
 	if (request.type === "check-next") {
 		if (CheckNext()) {
 			SendMessage("is-next");
+			SendMessage("is-next-download");
 		} else {
 			SendMessage("no-next");
 		}
