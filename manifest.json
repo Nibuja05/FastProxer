@@ -38,7 +38,6 @@
 		"downloads",
 		"unlimitedStorage"
 	],
-	"host_permissions": ["https://api.anime-skip.com/graphql"],
 	"browser_action": {
 		"default_icon": {
 			"19": "icons/icon_19.png",
