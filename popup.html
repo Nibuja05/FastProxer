@@ -2,14 +2,14 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>Fast Proxer</title>
+		<title>Proxer Cinema</title>
 		<link rel="stylesheet" href="style_popup.css" />
-		<script src="script_popup.js"></script>
+		<script src="dist/popup_script.js"></script>
 	</head>
 	<body>
 		<div class="TitleBar">
 			<div id="Icon"></div>
-			<span class="TitleText"> <b>Fast</b> Proxer! </span>
+			<span class="TitleText"> Proxer <b>Cinema</b> </span>
 		</div>
 		<div class="PopupMain">
 			<span
@@ -19,24 +19,36 @@
 			<div class="Placeholder"></div>
 			<div id="PopupSettings">
 				<div class="PopupSettingsEntry">
-					<span>Vollbildmodus beibehalten</span>
-					<input id="fullscreen" type="checkbox" checked />
-				</div>
-				<div class="PopupSettingsEntry">
-					<span>Video Fortschritt speichern</span>
-					<input id="progress" type="checkbox" checked />
-				</div>
-				<div class="PopupSettingsEntry">
 					<span>Nächste Episode nach Ende</span>
-					<input id="autonext" type="checkbox" checked />
+					<input id="autoNext" type="checkbox" checked />
+					<div class="PopupSettingsEntryTooltip">
+						Am Ende der Episode wird automatisch zur nächsten Folge
+						gesprungen
+					</div>
 				</div>
 				<div class="PopupSettingsEntry">
 					<span>Autostart für neue Episode</span>
-					<input id="autoplay" type="checkbox" checked />
+					<input id="autoPlay" type="checkbox" checked />
+					<div class="PopupSettingsEntryTooltip">
+						Neue Folgen werden automatisch gestartet sobald sie
+						geladen wurden
+					</div>
+				</div>
+				<div class="PopupSettingsEntry">
+					<span>Automatisch Aktualisierung</span>
+					<input id="autoRefresh" type="checkbox" checked />
+					<div class="PopupSettingsEntryTooltip">
+						Wenn der Vollbildmodus verlassen wird, wird zur
+						eigentlichen Webseite gewechselt
+					</div>
 				</div>
 				<div class="PopupSettingsEntry">
 					<span>Download Button anzeigen</span>
 					<input id="download" type="checkbox" checked />
+					<div class="PopupSettingsEntryTooltip">
+						Zeigt den Download-Button an um die aktuelle Folge
+						herunterzuladen
+					</div>
 				</div>
 				<div
 					class="PopupSettingsEntryExtra Hidden HasTooltip"
@@ -50,14 +62,14 @@
 							<li><code>&lt;Name&gt;</code>: Name</li>
 							<li><code>&lt;Lang&gt;</code>: Sprache</li>
 							<li>
-								<code>&lt;Ep[<i>base</i>]&gt;</code>: Episode
+								<code>&lt;Ep[<i>len</i>]&gt;</code>: Episode
 							</li>
 							<li>
-								<code>&lt;MaxEp[<i>base</i>]&gt;</code>: Anzahl
+								<code>&lt;MaxEp[<i>len</i>]&gt;</code>: Anzahl
 								Episoden
 							</li>
 							<li>
-								<code>&lt;Se[<i>base</i>]&gt;</code>: Staffel
+								<code>&lt;Se[<i>len</i>]&gt;</code>: Staffel
 								(manuell)
 							</li>
 						</ul>

@@ -1,10 +1,10 @@
 #ControlButton {
 	width: 120px;
 	height: 40px;
-	background-color: rgba(150, 150, 150, 0.85);
+	background-color: rgba(61, 61, 61, 0.6);
 	cursor: pointer;
 	position: absolute;
-	border-radius: 10px;
+	border-radius: 5px;
 	font-size: 25px;
 	font-family: Arial;
 	font-weight: bold;
@@ -18,11 +18,12 @@
 }
 
 #ControlButton:hover {
-	background-color: rgba(150, 150, 150, 1);
+	background-color: rgba(96, 96, 96, 0.8);
 }
 
 #ControlButton.hidden,
-#DownloadButton.hidden {
+#DownloadButton.hidden,
+#CancelButton.hidden {
 	opacity: 0;
 	pointer-events: none;
 }
@@ -35,6 +36,17 @@
 .Prev {
 	bottom: 80px;
 	left: 20px;
+}
+
+#ControlButton.Cancel {
+	background-color: rgba(27, 27, 27, 0.6);
+	bottom: 80px;
+	right: 160px;
+	font-size: 22px;
+}
+
+#ControlButton.Cancel:hover {
+	background-color: rgba(53, 53, 53, 0.8);
 }
 
 #ControlButton span {
@@ -53,31 +65,16 @@
 .ControlButtonBack.started {
 	transition: all 5s linear;
 	clip: rect(0px, 120px, 40px, 0px);
-	/* width: 120px; */
 }
 
-#DownloadButton {
-	width: 40px;
-	height: 40px;
-	background-color: rgba(150, 150, 150, 0.5);
-	border-radius: 50%;
-	background-image: url("https://i.imgur.com/yJdZoQg.png");
-	background-size: 60% 60%;
-	background-position: center;
-	background-repeat: no-repeat;
-	cursor: pointer;
-	transition: background-color 0.25s ease-in-out, opacity 0.5s ease-in-out;
+.nextText,
+.skip .nextTextAlt {
+	display: block;
 }
 
-#DownloadButton:hover {
-	background-color: rgba(150, 150, 150, 0.85);
-}
-
-#DownloadButton.Multi {
-	background-image: url("https://i.imgur.com/rdrwnV7.png");
-	right: 60px;
-	opacity: 0;
-	pointer-events: none;
+.skip .nextText,
+.nextTextAlt {
+	display: none;
 }
 
 .ButtonBar {
@@ -97,4 +94,89 @@
 #player_code .plyr.plyr--video {
 	display: block !important;
 	height: 100% !important;
+}
+
+#VideoInfo {
+	position: absolute;
+	top: 10px;
+	opacity: 1;
+	width: 100%;
+	text-align: center;
+	pointer-events: none;
+	color: white;
+	text-shadow: 0 0 5px black;
+	transition: top 0.15s ease-in-out, opacity 0.1s ease-in-out;
+	font-size: 20px;
+}
+
+#VideoInfo.hidden {
+	top: -20px;
+	opacity: 0;
+}
+
+iframe.video_frame {
+	width: 1040px;
+	height: auto;
+	aspect-ratio: 720/504;
+}
+
+.control_center_flex {
+	display: flex;
+	justify-content: space-between;
+}
+.control_center_flex a {
+	flex-grow: 1;
+	max-width: 180px;
+}
+
+#plyr {
+	aspect-ratio: 720/504;
+}
+#player_code {
+	aspect-ratio: 720/504;
+}
+
+.utility_row {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: row-reverse;
+	justify-content: right;
+	gap: 10px;
+}
+
+.utility_row div {
+	height: 40px;
+	width: 40px;
+	cursor: pointer;
+	transition: transform 0.2s ease-in-out;
+}
+
+.utility_row div:hover {
+	transform: scale(1.1);
+}
+
+.utility_row div:active {
+	transform: scale(1.05);
+}
+
+.utility_row .cinema {
+	background-image: url("https://i.imgur.com/aj6l53m.png");
+	background-size: 90%;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.utility_row .download {
+	background-image: url("https://i.imgur.com/yJdZoQg.png");
+	background-size: 70%;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.utility_row .download_multi {
+	background-image: url("https://i.imgur.com/rdrwnV7.png");
+	background-size: 70%;
+	background-repeat: no-repeat;
+	background-position: center;
 }

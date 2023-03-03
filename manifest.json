@@ -1,28 +1,32 @@
 {
 	"manifest_version": 2,
-	"name": "FastProxer",
-	"description": "A quicker way to navigate on proxer streams!",
-	"version": "2.0.1",
+	"name": "Proxer Cinema",
+	"description": "Watching on Proxer made comfortable!",
+	"version": "0.0.1",
 	"icons": {
 		"16": "icons/icon_16.png",
 		"48": "icons/icon_48.png",
 		"128": "icons/icon_128.png"
 	},
 	"background": {
-		"scripts": ["background.js"]
+		"scripts": ["dist/background.js"]
 	},
 	"content_scripts": [
 		{
 			"all_frames": true,
-			"matches": ["https://stream.proxer.me/*"],
+			"matches": [
+				"https://stream.proxer.me/*",
+				"https://www.mp4upload.com/*",
+				"https://stream-service.proxer.me/*"
+			],
 			"css": ["style.css"],
-			"js": ["script.js"]
+			"js": ["dist/stream_script.js"]
 		},
 		{
 			"all_frames": true,
 			"matches": ["https://proxer.me/watch/*"],
 			"css": ["style.css"],
-			"js": ["script_main.js"]
+			"js": ["dist/page_script.js"]
 		}
 	],
 
@@ -31,15 +35,17 @@
 		"https://proxer.me/*",
 		"cookies",
 		"storage",
-		"downloads"
+		"downloads",
+		"unlimitedStorage"
 	],
+	"host_permissions": ["https://api.anime-skip.com/graphql"],
 	"browser_action": {
 		"default_icon": {
 			"19": "icons/icon_19.png",
 			"38": "icons/icon_38.png",
 			"48": "icons/icon_48.png"
 		},
-		"default_title": "FastProxer Title",
+		"default_title": "Proxer Cinema",
 		"default_popup": "popup.html"
 	}
 }
