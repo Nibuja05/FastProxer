@@ -19,8 +19,12 @@ async function stream_Init() {
 	document.onmousemove = () => {
 		stream_onMouseMove();
 	};
-	autoSkip = await stream_GetSetting("autoNext");
-	autoStart = await stream_GetSetting("autoPlay");
+	try {
+		autoSkip = await stream_GetSetting("autoNext");
+		autoStart = await stream_GetSetting("autoPlay");
+	} catch {
+		console.log("Failed to load ProxerCinema global settings!");
+	}
 	stream_RefreshChecks();
 
 	const playerDiv = document.querySelector("#player_code") as HTMLVideoElement;
@@ -53,7 +57,7 @@ function stream_RefreshChecks() {
 		if (!curTime) return;
 		const nextSkip = stream_ToNextSkip(curTime);
 		if (!nextSkip) return;
-		if (nextSkip.left <= 5) {
+		if (nextSkip.left <= 2) {
 			if (nextSkip.toEnd) {
 				steam_StartVideoSkip();
 			} else {
@@ -251,7 +255,6 @@ function stream_AddNextButton() {
 		return;
 	}
 	let player = stream_FindPlayer();
-	console.log("player!", player);
 	if (!player) return;
 	let button = document.createElement("div");
 	button.setAttribute("id", "ControlButton");
@@ -476,7 +479,6 @@ function stream_ReceiveMessge<MName extends keyof MessageDeclarations>(
 	}
 	if (request.type == "globalEvent") {
 		const event = request.message as GlobalEvent;
-		console.log("REceive", event);
 		if (event == "HasNext" && STATUS == "Original") stream_AddNextButton();
 		if (event == "HasPrev" && STATUS == "Original") stream_AddPrevButton();
 		if (event == "NoNext" && STATUS == "Original") {

@@ -49,6 +49,7 @@ function popup_Init() {
             }
         }
     }
+    popup_FinalizeSaveSettings(); //initial!
 }
 function popup_CheckboxChange(element, name) {
     popup_SaveSettings(name, element.checked ? 1 : 0);

@@ -27,6 +27,12 @@
 			"matches": ["https://proxer.me/watch/*"],
 			"css": ["style.css"],
 			"js": ["dist/page_script.js"]
+		},
+		{
+			"all_frames": true,
+			"matches": ["https://proxer.me/info/*"],
+			"css": ["style.css"],
+			"js": ["dist/info_script.js"]
 		}
 	],
 

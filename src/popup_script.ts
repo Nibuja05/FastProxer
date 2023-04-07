@@ -44,6 +44,7 @@ function popup_Init() {
 			}
 		}
 	}
+	popup_FinalizeSaveSettings(); //initial!
 }
 
 function popup_CheckboxChange(element: HTMLInputElement, name: keyof GlobalSettings) {

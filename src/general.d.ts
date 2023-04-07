@@ -55,6 +55,7 @@ interface MessageDeclarations {
 	prepareTimestamps: [VideoInfo, void];
 	requestTimestamps: [{ name: string; episode: number }, void];
 	sendTimestamps: [TimeStamp[], void];
+	sendAnimeInfo: [AnimeInfo, void];
 }
 interface VideoInfo {
 	name: string;
@@ -108,7 +109,6 @@ interface TimeStamp {
 	type: TimestampType;
 	at: number;
 }
-
 interface SavedTimestampData {
 	[name: string]: {
 		[episode: number]: {
@@ -117,4 +117,14 @@ interface SavedTimestampData {
 			timeStamps: Array<TimeStamp>;
 		};
 	};
+}
+interface AnimeInfo {
+	name: string;
+	englishName: string;
+	germanName: string;
+	japaneseName: string;
+	synonym?: string;
+	genre: string[];
+	status: string;
+	description: string;
 }

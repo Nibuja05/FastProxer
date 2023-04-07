@@ -49,9 +49,11 @@ function bg_GetSetting(name) {
     });
 }
 function bg_SendMessage(type, message) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         chrome.tabs.getSelected(function (tab) {
             if (!tab)
+                return;
+            if (!tab.id || tab.id <= 0)
                 return;
             chrome.tabs.sendMessage(tab.id, {
                 type: type,
@@ -66,15 +68,27 @@ function bg_SendMessage(type, message) {
         });
     });
 }
-function bg_PrepareTimestamps(name) {
+async function bg_PrepareTimestamps(name) {
+    if (!animeInfo.has(name)) {
+        const success = await bg_WaitForEvent(name, 2000);
+        if (!success) {
+            console.log(`Failed to get info for ${name}!`);
+            return;
+        }
+    }
+    const engName = animeInfo.get(name).englishName;
     chrome.storage.local.get("timestamps", async (rawData) => {
         let data = rawData.timestamps;
         if (!data)
             data = {};
         if (!data[name]) {
-            const answer = await bg_TimestampRequest(name);
+            const answer = await bg_TimestampRequest(engName);
+            if (answer.data.searchShows.length < 1) {
+                console.log("No shows found...");
+                return;
+            }
             const showData = answer.data.searchShows[0];
-            if (name != showData.name)
+            if (engName != showData.name)
                 return;
             const episodes = {};
             showData.episodes.forEach((episode) => {
@@ -148,6 +162,7 @@ function bg_TimestampRequest(name) {
 let savedVideoInfo;
 let savedProgress = new Map();
 let globalCinemaMode = false;
+let animeInfo = new Map();
 chrome.runtime.onMessage.addListener(bg_ReceiveMessge);
 function bg_ReceiveMessge(request, _, sendResponse) {
     const fail = () => sendResponse({ status: "Error" });
@@ -194,6 +209,11 @@ function bg_ReceiveMessge(request, _, sendResponse) {
     if (request.type == "prepareTimestamps") {
         bg_PrepareTimestamps(request.message.name);
     }
+    if (request.type == "sendAnimeInfo") {
+        const info = request.message;
+        animeInfo.set(info.name, info);
+        bg_CheckWait(info.name);
+    }
     if (request.type == "requestTimestamps") {
         bg_GetTimestampInfo(request.message).then((stamps) => {
             if (stamps)
@@ -208,4 +228,30 @@ function bg_ReceiveMessge(request, _, sendResponse) {
     else {
         sendResponse({ status: "OK", content: answer });
     }
+}
+function bg_Wait(time) {
+    return new Promise((resolve, _) => {
+        setTimeout(() => {
+            resolve();
+        }, time);
+    });
+}
+const waitEvents = new Map();
+function bg_WaitForEvent(name, maxTime) {
+    return new Promise((resolve, _) => {
+        const timeout = setTimeout(() => {
+            waitEvents.delete(name);
+            resolve(false); //Failed
+        }, maxTime);
+        waitEvents.set(name, () => {
+            waitEvents.delete(name);
+            clearTimeout(timeout);
+            resolve(true); //Success!
+        });
+    });
+}
+function bg_CheckWait(name) {
+    if (!waitEvents.has(name))
+        return;
+    waitEvents.get(name)();
 }

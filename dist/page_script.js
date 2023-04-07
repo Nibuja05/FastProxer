@@ -22,16 +22,17 @@ async function page_Init() {
         }
         if (info)
             page_SendMessage("prepareTimestamps", info);
+        page_AddUtilityRow();
+        page_SendMessage("getCinemaMode", undefined).then((answer) => {
+            if (answer.status != "OK")
+                return;
+            if (answer.content) {
+                cinemaMode = answer.content;
+                page_EnterCinemaMode();
+            }
+        });
+        page_OpenDetails();
     }
-    page_AddUtilityRow();
-    page_SendMessage("getCinemaMode", undefined).then((answer) => {
-        if (answer.status != "OK")
-            return;
-        if (answer.content) {
-            cinemaMode = answer.content;
-            page_EnterCinemaMode();
-        }
-    });
 }
 function page_GetVideoInfo() {
     const container = document.querySelector("#wContainer");
@@ -297,6 +298,29 @@ function page_OldJump(type) {
         return;
     const targetUrl = page_GetIndexUrlFor(info.episode + (type == "Next" ? 1 : -1));
     window.location.href = targetUrl;
+}
+/**
+ * Open Details Page to get Anime info!!
+ * @returns
+ */
+function page_OpenDetails() {
+    const navBar = document.getElementById("simple-navi");
+    if (!navBar)
+        return;
+    const detailsElement = navBar.querySelector("li:nth-child(2) a");
+    if (!detailsElement)
+        return;
+    const link = detailsElement.href;
+    const iframe = document.createElement("iframe");
+    iframe.setAttribute("src", link);
+    iframe.style.width = "0px";
+    iframe.style.height = "0px";
+    document.body.appendChild(iframe);
+    iframe === null || iframe === void 0 ? void 0 : iframe.addEventListener("load", () => {
+        setTimeout(() => {
+            iframe.remove();
+        }, 250);
+    });
 }
 function page_SendMessage(type, message) {
     return new Promise((resolve, reject) => {
