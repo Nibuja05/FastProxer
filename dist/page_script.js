@@ -185,9 +185,13 @@ function page_EnterCinemaMode() {
     const controlNext = controlBar.querySelector("td:nth-child(3) a");
     const controlCenter = controlBar.querySelector("td:nth-child(2)");
     const controlWatchlist = controlBar.querySelector("td:nth-child(2) a:first-child");
-    controlCenter.insertBefore(controlPrev, controlWatchlist);
-    controlCenter.appendChild(controlNext);
+    if (controlPrev)
+        controlCenter.insertBefore(controlPrev, controlWatchlist);
+    if (controlNext)
+        controlCenter.appendChild(controlNext);
     controlCenter.classList.add("control_center_flex");
+    if (!controlPrev)
+        controlCenter.classList.add("no_prev");
     const brElem = controlCenter.querySelector("br");
     const leftColumn = controlBar.querySelector("td:nth-child(3)");
     const rightColumn = controlBar.querySelector("td:nth-child(1)");
@@ -217,8 +221,10 @@ function page_LeaveCinemaMode() {
     brElem.removeAttribute("style");
     leftColumn.removeAttribute("style");
     rightColumn.removeAttribute("style");
-    leftColumn.appendChild(controlPrev);
-    rightColumn.appendChild(controlNext);
+    if (controlPrev && controlCenter.children.length >= 5)
+        leftColumn.appendChild(controlPrev);
+    if (controlNext)
+        rightColumn.appendChild(controlNext);
 }
 function page_RequestDownload() {
     if (!info)

@@ -194,13 +194,14 @@ function page_EnterCinemaMode() {
 	rightPadding.style.display = "none";
 	videoFrame.classList.add("video_frame");
 
-	const controlPrev = controlBar.querySelector("td:nth-child(1) a")!;
-	const controlNext = controlBar.querySelector("td:nth-child(3) a")!;
+	const controlPrev = controlBar.querySelector("td:nth-child(1) a");
+	const controlNext = controlBar.querySelector("td:nth-child(3) a");
 	const controlCenter = controlBar.querySelector("td:nth-child(2)")!;
 	const controlWatchlist = controlBar.querySelector("td:nth-child(2) a:first-child")!;
-	controlCenter.insertBefore(controlPrev, controlWatchlist);
-	controlCenter.appendChild(controlNext);
+	if (controlPrev) controlCenter.insertBefore(controlPrev, controlWatchlist);
+	if (controlNext) controlCenter.appendChild(controlNext);
 	controlCenter.classList.add("control_center_flex");
+	if (!controlPrev) controlCenter.classList.add("no_prev");
 
 	const brElem = controlCenter.querySelector("br") as HTMLElement;
 	const leftColumn = controlBar.querySelector("td:nth-child(3)") as HTMLElement;
@@ -223,8 +224,8 @@ function page_LeaveCinemaMode() {
 	rightPadding.removeAttribute("style");
 	videoFrame.classList.remove("video_frame");
 
-	const controlPrev = controlBar.querySelector("td:nth-child(2) a:nth-child(1)")!;
-	const controlNext = controlBar.querySelector("td:nth-child(2) a:last-child")!;
+	const controlPrev = controlBar.querySelector("td:nth-child(2) a:nth-child(1)");
+	const controlNext = controlBar.querySelector("td:nth-child(2) a:last-child");
 	const controlCenter = controlBar.querySelector("td:nth-child(2)")!;
 	controlCenter.classList.remove("control_center_flex");
 
@@ -235,8 +236,8 @@ function page_LeaveCinemaMode() {
 	leftColumn.removeAttribute("style");
 	rightColumn.removeAttribute("style");
 
-	leftColumn.appendChild(controlPrev);
-	rightColumn.appendChild(controlNext);
+	if (controlPrev && controlCenter.children.length >= 5) leftColumn.appendChild(controlPrev);
+	if (controlNext) rightColumn.appendChild(controlNext);
 }
 
 function page_RequestDownload() {
