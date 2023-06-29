@@ -19,18 +19,32 @@ function findFiles(pattern: string): Promise<string[]> {
 	});
 }
 
-function addFile(zip: JSZip, path: string) {
-	const content = fs.readFileSync(path);
-	zip.file(path, content);
+function removeDistPath(manifest: string) {
+	const text = fs.readFileSync(manifest, "utf-8");
+	return text.replace(/dist\//g, "");
+}
+
+function addFile(zip: JSZip, path: string, placeInRoot = false) {
+	let content: Buffer | string = fs.readFileSync(path);
+	if (path == "manifest.json") content = removeDistPath(path);
+	if (placeInRoot) {
+		const newPath = path.replace(/.*?[\\\/](.*)/, "$1");
+		zip.file(newPath, content);
+	} else {
+		zip.file(path, content);
+	}
 }
 
 async function makeZip() {
 	const jsFiles = await findFiles("dist/*.js");
 	const icons = await findFiles("icons/*");
-	const allFiles = [...rootFiles, ...jsFiles, ...icons];
+	const allFiles = [...rootFiles, ...icons];
 	const zip = new JSZip();
 	for (const file of allFiles) {
 		addFile(zip, file);
+	}
+	for (const file of jsFiles) {
+		addFile(zip, file, true);
 	}
 	zip.generateAsync({ type: "arraybuffer" }).then(function (content) {
 		fs.writeFileSync("./ProxerCinema.zip", Buffer.from(content));

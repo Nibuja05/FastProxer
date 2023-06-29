@@ -6,17 +6,24 @@ let streamInfo;
 let autoSkip = true;
 let autoStart = false;
 let timeSkips = [];
+let tries = 0; //max = 5
 async function stream_Init() {
-    document.onmousemove = () => {
-        stream_onMouseMove();
-    };
     try {
         autoSkip = await stream_GetSetting("autoNext");
         autoStart = await stream_GetSetting("autoPlay");
     }
     catch (_a) {
         console.log("Failed to load ProxerCinema global settings!");
+        if (tries >= 5) {
+            throw new Error("Maximum number of retries reached for retrieving ProxerCinema global settings!");
+        }
+        tries++;
+        setTimeout(() => stream_Init(), 1000);
+        return;
     }
+    document.onmousemove = () => {
+        stream_onMouseMove();
+    };
     stream_RefreshChecks();
     const playerDiv = document.querySelector("#player_code");
     if (playerDiv) {

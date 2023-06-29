@@ -16,17 +16,32 @@ function findFiles(pattern) {
         });
     });
 }
-function addFile(zip, path) {
-    const content = fs.readFileSync(path);
-    zip.file(path, content);
+function removeDistPath(manifest) {
+    const text = fs.readFileSync(manifest, "utf-8");
+    return text.replace(/dist\//g, "");
+}
+function addFile(zip, path, placeInRoot = false) {
+    let content = fs.readFileSync(path);
+    if (path == "manifest.json")
+        content = removeDistPath(path);
+    if (placeInRoot) {
+        const newPath = path.replace(/.*?[\\\/](.*)/, "$1");
+        zip.file(newPath, content);
+    }
+    else {
+        zip.file(path, content);
+    }
 }
 async function makeZip() {
     const jsFiles = await findFiles("dist/*.js");
     const icons = await findFiles("icons/*");
-    const allFiles = [...rootFiles, ...jsFiles, ...icons];
+    const allFiles = [...rootFiles, ...icons];
     const zip = new JSZip();
     for (const file of allFiles) {
         addFile(zip, file);
+    }
+    for (const file of jsFiles) {
+        addFile(zip, file, true);
     }
     zip.generateAsync({ type: "arraybuffer" }).then(function (content) {
         fs.writeFileSync("./ProxerCinema.zip", Buffer.from(content));
