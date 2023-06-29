@@ -5,12 +5,18 @@ let prevUrl;
 let streamInfo;
 let autoSkip = true;
 let autoStart = false;
+let hotkeys = {
+    next: "n",
+    prev: "p",
+    cancel: "x",
+};
 let timeSkips = [];
 let tries = 0; //max = 5
 async function stream_Init() {
     try {
         autoSkip = await stream_GetSetting("autoNext");
         autoStart = await stream_GetSetting("autoPlay");
+        hotkeys = await stream_GetSettingHotkeys();
     }
     catch (_a) {
         console.log("Failed to load ProxerCinema global settings!");
@@ -35,6 +41,23 @@ async function stream_Init() {
         player.style.height = "auto";
         player.style.width = "100%";
     }
+    stream_HandleHotkeys();
+}
+function stream_HandleHotkeys() {
+    document.addEventListener("keydown", (event) => {
+        if (event.key == hotkeys.next) {
+            if (nextButton)
+                stream_NextButtonClick();
+        }
+        if (event.key == hotkeys.prev) {
+            if (prevButton)
+                stream_PrevButtonClick();
+        }
+        if (event.key == hotkeys.cancel) {
+            if (cancelButton)
+                stream_CancelButtonClick();
+        }
+    });
 }
 function stream_RefreshChecks() {
     if (skipTimeout) {
@@ -130,18 +153,7 @@ function steam_StartVideoSkip(to) {
     nextButton.insertBefore(nextButtonFiller, nextButton.childNodes[0]);
     // so elements are showed again
     stream_onMouseMove();
-    stream_AddCancelButton(() => {
-        if (skipTimeout) {
-            clearTimeout(skipTimeout);
-            skipTimeout = undefined;
-        }
-        if (cancelButton)
-            cancelButton.classList.add("hidden");
-        nextButtonFiller.remove();
-        nextButton.classList.remove("skip");
-        if (to)
-            setTimeout(() => stream_RefreshChecks(), 5000);
-    });
+    stream_AddCancelButton();
     skipTimeout = setTimeout(() => {
         if (cancelButton)
             cancelButton.classList.add("hidden");
@@ -158,7 +170,7 @@ function steam_StartVideoSkip(to) {
             setTimeout(() => stream_RefreshChecks(), 5000);
     }, 5000);
 }
-function stream_AddCancelButton(callback) {
+function stream_AddCancelButton() {
     if (cancelButton) {
         cancelButton.classList.remove("hidden");
         return;
@@ -172,8 +184,24 @@ function stream_AddCancelButton(callback) {
     cancelButton.innerHTML = "Cancel";
     player.appendChild(cancelButton);
     cancelButton.addEventListener("click", () => {
-        callback();
+        stream_CancelButtonClick();
     });
+}
+function stream_CancelButtonClick() {
+    if (skipTimeout) {
+        clearTimeout(skipTimeout);
+        skipTimeout = undefined;
+    }
+    if (cancelButton)
+        cancelButton.classList.add("hidden");
+    if (!nextButton)
+        return;
+    const nextButtonFiller = nextButton === null || nextButton === void 0 ? void 0 : nextButton.querySelector(".ControlButtonBack");
+    if (!nextButtonFiller)
+        return;
+    nextButtonFiller.remove();
+    nextButton.classList.remove("skip");
+    setTimeout(() => stream_RefreshChecks(), 5000);
 }
 let mouseMoveTimeout = undefined;
 let still = true;
@@ -523,6 +551,15 @@ function stream_GetSetting(name) {
             if (!data || data[name] == undefined)
                 reject();
             resolve(data[name] === 1);
+        });
+    });
+}
+function stream_GetSettingHotkeys() {
+    return new Promise((resolve, reject) => {
+        chrome.storage.sync.get("hotkeys", (data) => {
+            if (!data || !data.hotkeys)
+                reject();
+            resolve(data.hotkeys);
         });
     });
 }

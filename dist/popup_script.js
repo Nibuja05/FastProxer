@@ -6,6 +6,11 @@ let settings = {
     download: 1,
     downloadPattern: "<Name> (<Lang>) - <Ep[2]>",
     staffelNr: 1,
+    hotkeys: {
+        next: "n",
+        prev: "p",
+        cancel: "x",
+    },
 };
 const settingNames = ["autoNext", "autoPlay", "autoRefresh", "download"];
 const extraMap = new Map();
@@ -50,6 +55,7 @@ function popup_Init() {
         }
     }
     popup_FinalizeSaveSettings(); //initial!
+    popup_HandleHotkeys();
 }
 function popup_CheckboxChange(element, name) {
     popup_SaveSettings(name, element.checked ? 1 : 0);
@@ -58,9 +64,15 @@ function popup_CheckboxChange(element, name) {
     }
 }
 let saveTimeout;
-function popup_SaveSettings(name, value, timeout = 0) {
-    // @ts-ignore WHY???
-    settings[name] = value;
+function popup_SaveSettings(name, value, timeout = 0, hotkey = false) {
+    if (!hotkey) {
+        //@ts-ignore
+        settings[name] = value;
+    }
+    else {
+        //@ts-ignore
+        settings.hotkeys[name] = value;
+    }
     if (saveTimeout) {
         clearTimeout(saveTimeout);
         saveTimeout = undefined;
@@ -99,3 +111,54 @@ function popup_FetchSettings() {
 window.onload = () => {
     popup_FetchSettings();
 };
+function popup_HandleHotkeys() {
+    const hotkeyOpen = document.getElementById("HotkeyOpen");
+    hotkeyOpen === null || hotkeyOpen === void 0 ? void 0 : hotkeyOpen.addEventListener("click", popup_ToggleHotkeys);
+    const hotkeyNext = document.getElementById("HotkeyNext");
+    hotkeyNext.setAttribute("sName", "next");
+    hotkeyNext.textContent = settings.hotkeys.next.toUpperCase();
+    const hotkeyPrev = document.getElementById("HotkeyPrev");
+    hotkeyPrev.setAttribute("sName", "prev");
+    hotkeyPrev.textContent = settings.hotkeys.prev.toUpperCase();
+    const hotkeyCancel = document.getElementById("HotkeyCancel");
+    hotkeyCancel.setAttribute("sName", "cancel");
+    hotkeyCancel.textContent = settings.hotkeys.cancel.toUpperCase();
+    for (const btn of [hotkeyNext, hotkeyPrev, hotkeyCancel]) {
+        btn.addEventListener("click", async () => {
+            btn.classList.add("active");
+            const newButton = await popup_ListenToKeys();
+            btn.classList.remove("active");
+            if (!newButton)
+                return;
+            const settingName = btn.getAttribute("sName");
+            if (!settingName)
+                return;
+            btn.textContent = newButton.toUpperCase();
+            popup_SaveSettings(settingName, newButton, 0, true);
+        });
+    }
+}
+function popup_ToggleHotkeys() {
+    const hotkeys = document.getElementById("Hotkeys");
+    if (!hotkeys)
+        return;
+    if (hotkeys.classList.contains("open"))
+        hotkeys.classList.remove("open");
+    else
+        hotkeys.classList.add("open");
+}
+function popup_ListenToKeys() {
+    return new Promise((resolve, reject) => {
+        const onKeydown = (event) => {
+            const letter = event.key;
+            if (isLetter(letter)) {
+                resolve(letter);
+                document.removeEventListener("keydown", onKeydown);
+            }
+        };
+        document.addEventListener("keydown", onKeydown);
+    });
+}
+function isLetter(str) {
+    return str.length === 1 && str.match(/[a-z]/i);
+}

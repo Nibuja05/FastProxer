@@ -21,7 +21,7 @@ function findFiles(pattern: string): Promise<string[]> {
 
 function removeDistPath(manifest: string) {
 	const text = fs.readFileSync(manifest, "utf-8");
-	return text.replace(/dist\//g, "");
+	return text.replace(/(dist|icons)\//g, "");
 }
 
 function addFile(zip: JSZip, path: string, placeInRoot = false) {
@@ -38,12 +38,11 @@ function addFile(zip: JSZip, path: string, placeInRoot = false) {
 async function makeZip() {
 	const jsFiles = await findFiles("dist/*.js");
 	const icons = await findFiles("icons/*");
-	const allFiles = [...rootFiles, ...icons];
 	const zip = new JSZip();
-	for (const file of allFiles) {
+	for (const file of rootFiles) {
 		addFile(zip, file);
 	}
-	for (const file of jsFiles) {
+	for (const file of [...jsFiles, ...icons]) {
 		addFile(zip, file, true);
 	}
 	zip.generateAsync({ type: "arraybuffer" }).then(function (content) {

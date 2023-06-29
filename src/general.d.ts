@@ -1,5 +1,10 @@
 type StatusCode = "OK" | "Error" | "NoData";
 type SettingBool = 0 | 1;
+interface Hotkeys {
+	next: string;
+	prev: string;
+	cancel: string;
+}
 interface GlobalSettings {
 	autoNext: SettingBool;
 	autoPlay: SettingBool;
@@ -7,6 +12,7 @@ interface GlobalSettings {
 	autoRefresh: SettingBool;
 	downloadPattern: string;
 	staffelNr: number;
+	hotkeys: Hotkeys;
 }
 type GlobalSettingsNames = TupleUnion<keyof GlobalSettings>;
 type TupleUnion<U extends string, R extends string[] = []> = {

@@ -41,9 +41,91 @@ body.saved {
 	font-family: Arial;
 }
 
-.PopupMain > span {
+.Header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+.Header > span {
 	font-style: italic;
 	font-size: 14px;
+}
+
+#HotkeyOpen {
+	background-color: transparent;
+	border: 1px solid black;
+	border-radius: 2px;
+	transition: background-color 0.25s ease-in-out;
+}
+
+#HotkeyOpen {
+	cursor: pointer;
+	background-color: #8080802b;
+}
+
+#Hotkeys {
+	position: absolute;
+	display: flex;
+	width: 100%;
+	height: 0px;
+	opacity: 0;
+	background: linear-gradient(
+		180deg,
+		rgba(240, 240, 240, 1) 0%,
+		rgba(240, 240, 240, 1) 85%,
+		rgba(255, 255, 255, 0) 100%
+	);
+	z-index: 90;
+	left: 0;
+	top: 90px;
+	transition: all 0.15s ease-in-out;
+	padding-top: 10px;
+
+	flex-direction: row;
+	justify-content: space-around;
+	pointer-events: none;
+}
+
+#Hotkeys.open {
+	height: 75px;
+	opacity: 1;
+	pointer-events: all;
+}
+
+.Hotkey {
+	display: flex;
+	width: 40px;
+	height: 60px;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.HotkeyShort {
+	width: 40px;
+	height: 40px;
+	background: transparent;
+	border: 2px solid black;
+	border-radius: 4px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 99;
+
+	font-size: 20px;
+	transition: background-color 0.1s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.HotkeyShort:hover {
+	cursor: pointer;
+	background-color: #8080802b;
+	transform: scale(1.05);
+}
+
+.HotkeyShort.active {
+	background-color: #808080c0;
 }
 
 .Placeholder {
@@ -77,7 +159,7 @@ body.saved {
 	border-radius: 2px;
 	background-color: #191919;
 	color: #fff;
-	z-index: 99;
+	z-index: 85;
 	padding: 5px;
 	font-size: 12px;
 }
